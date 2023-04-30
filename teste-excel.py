@@ -89,15 +89,16 @@ paga_selecionada = table_excel_csv.loc[pagas_filtro]
 
 
 # Filtra as linhas com base nos valores da coluna 'Conta'
-filtro_pagas = liquidada_selecionada['Conta'].isin(contas_interesse)
-linhas_filtradas_pagas = liquidada_selecionada.loc[filtro_pagas]
+filtro_pagas = paga_selecionada['Conta'].isin(contas_interesse)
+linhas_filtradas_pagas = paga_selecionada.loc[filtro_pagas]
 
 
-#uf = linhas_filtradas['UF']
+#uf = linhas_filtradas_empenhadas['UF']
 
-#csv_result['UF'] = [uf]
+#csv_result['UF'] = uf.reset_index()
 
 #csv_result.to_csv('uf-result.csv', index=False)
 
-linhas_filtradas_empenhadas.to_csv('teste_csv.csv', index=False)
-
+linhas_filtradas_empenhadas.to_csv('empenhadas_csv.csv', index=False)
+linhas_filtradas_liquidadas.to_csv('liquidadas_csv.csv', index=False)
+linhas_filtradas_pagas.to_csv('pagas_csv.csv', index=False)
