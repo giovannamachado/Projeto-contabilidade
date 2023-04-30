@@ -99,6 +99,13 @@ linhas_filtradas_pagas = paga_selecionada.loc[filtro_pagas]
 
 #csv_result.to_csv('uf-result.csv', index=False)
 
+for index, row in linhas_filtradas_empenhadas.iterrows():
+    csv_result.at[index, 'Instituição'] = row['Instituição']
+
+
+
 linhas_filtradas_empenhadas.to_csv('empenhadas_csv.csv', index=False)
 linhas_filtradas_liquidadas.to_csv('liquidadas_csv.csv', index=False)
 linhas_filtradas_pagas.to_csv('pagas_csv.csv', index=False)
+
+csv_result.to_csv('resultados.csv', index=False)
