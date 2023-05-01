@@ -1,26 +1,7 @@
 import pandas as pd
 
-"""def tratar_tabela(planilha: pd.DataFrame, coluna_interesse, contas_interesse) -> pd.DataFrame:
-    del planilha['Cod_IBGE']
-    del planilha['População']
-    del planilha['Identificador da Conta']
+#def get_uf(tabela: pd.DataFrame) -> pd.DataFrame:
 
-    planilha_filtrada = planilha.loc[planilha['Coluna'].isin(coluna_interesse) & planilha['Conta'].isin(contas_interesse)]
-
-    planilha_filtrada['Valor'] = pd.to_numeric(
-        planilha_filtrada['Valor']
-    ).fillna(0)
-
-    return planilha_filtrada"""
-
-
-def filtrar_tabela(tabela: pd.DataFrame, coluna_interesse, contas_interesse) -> pd.DataFrame:
-    tabela_filtrada = tabela.loc[tabela['Coluna'].isin(coluna_interesse) & tabela['Conta'].isin(contas_interesse)]
-
-    tabela_filtrada['Valor'] = pd.to_numeric(
-        tabela_filtrada['Valor'], errors='coerce').fillna(0)
-
-    return tabela_filtrada
 
 coluna_interesse = ['Despesas Empenhadas', 'Despesas Liquidadas', 'Despesas Pagas']
 
@@ -39,10 +20,4 @@ contas_interesse = [
     ]
 
 if __name__ == "__main__":
-    tabela = pd.read_excel('./Cópia de FINBRA_Municípios_Despesas por Função_2019.xlsx', skiprows=4)
-    tabela.to_csv('tabela_dados.csv', index=False)
-    #tabela_filtrada = tratar_tabela(tabela, coluna_interesse, contas_interesse)
-    tabela_filtrada = filtrar_tabela(tabela, coluna_interesse, contas_interesse)
-    #tabela_filtrada.to_csv('result.csv', index=False)
-    print(tabela['Valor'][0])
-    print(tabela_filtrada)
+    tabela = pd.read_csv('tabela_dados.csv', skiprows=4, low_memory=False)
