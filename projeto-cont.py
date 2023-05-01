@@ -40,8 +40,9 @@ contas_interesse = [
 
 if __name__ == "__main__":
     tabela = pd.read_excel('./Cópia de FINBRA_Municípios_Despesas por Função_2019.xlsx', skiprows=4)
+    tabela.to_csv('tabela_dados.csv', index=False)
     #tabela_filtrada = tratar_tabela(tabela, coluna_interesse, contas_interesse)
     tabela_filtrada = filtrar_tabela(tabela, coluna_interesse, contas_interesse)
-    tabela_filtrada.to_csv('result.csv', index=False)
+    #tabela_filtrada.to_csv('result.csv', index=False)
     print(tabela['Valor'][0])
     print(tabela_filtrada)
