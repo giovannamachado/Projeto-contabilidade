@@ -60,38 +60,21 @@ contas_interesse = [
     '10.306 - Alimentação e Nutrição'
     ]
 
-# filtrar linhas com as colunas desejadas
-col_des_empenhadas = ['Despesas Empenhadas']
-col_des_liquidadas = ['Despesas Liquidadas']
-col_des_pagas = ['Despesas Pagas']
 
-#coluna 'DESPESAS EMPENHADAS'
-empenhadas_filtro = table_excel_csv['Coluna'].isin(col_des_empenhadas)
-empenhada_selecionada = table_excel_csv.loc[empenhadas_filtro]
+def get_data_csv(tipo_conta: str):
+    """retorna os dados da tabela csv da coluna e conta definidas"""
+    df_despesa = table_excel_csv.loc[table_excel_csv['Coluna'] == tipo_conta]
+    df_contas = df_despesa.loc[df_despesa['Conta'].isin(contas_interesse)]
 
+    return df_contas
 
-# Filtra as linhas com base nos valores da coluna 'Conta'
-filtro_epem = empenhada_selecionada['Conta'].isin(contas_interesse)
-linhas_filtradas_empenhadas = empenhada_selecionada.loc[filtro_epem]
+df_empenhadas = get_data_csv('Despesas Empenhadas')
+df_liquidadas = get_data_csv('Despesas Liquidadas')
+df_pagas = get_data_csv('Despesas Pagas')
 
-#coluna 'DESPESAS LIQUIDAS'
-liquidadas_filtro = table_excel_csv['Coluna'].isin(col_des_liquidadas)
-liquidada_selecionada = table_excel_csv.loc[liquidadas_filtro]
-
-
-# Filtra as linhas com base nos valores da coluna 'Conta'
-filtro_pagas = liquidada_selecionada['Conta'].isin(contas_interesse)
-linhas_filtradas_liquidadas = liquidada_selecionada.loc[filtro_pagas]
-
-#colunas DESPESAS PAGAS
-pagas_filtro = table_excel_csv['Coluna'].isin(col_des_pagas)
-paga_selecionada = table_excel_csv.loc[pagas_filtro]
-
-
-# Filtra as linhas com base nos valores da coluna 'Conta'
-filtro_pagas = paga_selecionada['Conta'].isin(contas_interesse)
-linhas_filtradas_pagas = paga_selecionada.loc[filtro_pagas]
-
+df_empenhadas.to_csv('empenhadas.csv', index=False)
+df_liquidadas.to_csv('liquidadas.csv', index=False)
+df_pagas.to_csv('pagas.csv', index=False)
 
 #uf = linhas_filtradas_empenhadas['UF']
 
@@ -99,13 +82,13 @@ linhas_filtradas_pagas = paga_selecionada.loc[filtro_pagas]
 
 #csv_result.to_csv('uf-result.csv', index=False)
 
-for index, row in linhas_filtradas_empenhadas.iterrows():
-    csv_result.at[index, 'Instituição'] = row['Instituição']
+"""for row in linhas_filtradas_empenhadas.itertuples():
+    csv_result.at[row.Index, 'UF'] = row.UF
+    csv_result.at[row.Index, 'Instituição'] = row.Instituição
+
+    csv_result.at[row.Index, 'Despesas Empenhadas'] = linhas_filtradas_empenhadas.groupby(['UF', 'Instituição'])['Valor'].sum().reset_index()
 
 
 
-linhas_filtradas_empenhadas.to_csv('empenhadas_csv.csv', index=False)
-linhas_filtradas_liquidadas.to_csv('liquidadas_csv.csv', index=False)
-linhas_filtradas_pagas.to_csv('pagas_csv.csv', index=False)
 
-csv_result.to_csv('resultados.csv', index=False)
+csv_result.to_csv('resultados.csv', index=False)"""
