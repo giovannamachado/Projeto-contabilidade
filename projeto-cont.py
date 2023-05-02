@@ -2,7 +2,6 @@ import pandas as pd
 
 def get_cidade(tabela: pd.DataFrame, cidade: str, contas_interesse, coluna_interesse) -> pd.DataFrame:
     df_cidade = tabela.loc[tabela['Instituição'] == cidade]
-    print(df_cidade)
     df_cidade['Valor'] = pd.to_numeric(df_cidade['Valor'])
 
     dicio = {}
