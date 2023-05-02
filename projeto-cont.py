@@ -1,5 +1,10 @@
 import pandas as pd
 
+def get_tabela():
+    tabela = pd.read_csv('tabela_dados.csv', low_memory=False)
+
+    return tabela
+
 def get_cidade(tabela: pd.DataFrame, cidade: str, contas_interesse, coluna_interesse) -> pd.DataFrame:
     df_cidade = tabela.loc[tabela['Instituição'] == cidade]
     df_cidade['Valor'] = pd.to_numeric(df_cidade['Valor'])
@@ -50,9 +55,9 @@ contas_interesse = [
     ]
 
 if __name__ == "__main__":
-    tabela = pd.read_csv('tabela_dados.csv', low_memory=False)
+    tabela = get_tabela()
     tabela_uf = get_uf(tabela, 'PE', contas_interesse, coluna_interesse)
     tabela_cidade = get_cidade(tabela, 'Prefeitura Municipal de Recife - PE', contas_interesse, coluna_interesse)
     print(tabela_uf, end='\n')
     print(tabela_cidade)
-    tabela_cidade.to_csv('valor_cidade.csv', index=False)
+    #tabela_cidade.to_csv('valor_cidade.csv', index=False)
