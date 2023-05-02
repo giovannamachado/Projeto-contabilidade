@@ -5,6 +5,11 @@ def get_tabela():
 
     return tabela
 
+def get_all_uf(tabela: pd.DataFrame):
+    df_estados = tabela.loc[tabela['UF'].drop_duplicates()]
+
+    return df_estados
+
 def get_cidade(tabela: pd.DataFrame, cidade: str, contas_interesse, coluna_interesse) -> pd.DataFrame:
     df_cidade = tabela.loc[tabela['Instituição'] == cidade]
     df_cidade['Valor'] = pd.to_numeric(df_cidade['Valor'])
@@ -58,6 +63,8 @@ if __name__ == "__main__":
     tabela = get_tabela()
     tabela_uf = get_uf(tabela, 'PE', contas_interesse, coluna_interesse)
     tabela_cidade = get_cidade(tabela, 'Prefeitura Municipal de Recife - PE', contas_interesse, coluna_interesse)
+    tabela_todos_uf = get_all_uf(tabela)
+    print(tabela_todos_uf)
     print(tabela_uf, end='\n')
     print(tabela_cidade)
     #tabela_cidade.to_csv('valor_cidade.csv', index=False)
