@@ -19,7 +19,7 @@ def get_all_uf(tabela: pd.DataFrame) -> list:
 
 def get_cidade(tabela: pd.DataFrame, cidade: str, contas_interesse, coluna_interesse) -> pd.DataFrame:
     df_cidade = tabela.loc[tabela['Instituição'] == cidade]
-    df_cidade['Valor'] = pd.to_numeric(df_cidade['Valor'])
+    df_cidade['Valor'] = pd.to_numeric(df_cidade['Valor'], errors='coerce').fillna(0)
 
     dicio = {}
     for coluna in coluna_interesse:
@@ -33,21 +33,29 @@ def get_cidade(tabela: pd.DataFrame, cidade: str, contas_interesse, coluna_inter
                 dicio[coluna][conta] = value.max()
     
     tabela_cidade = pd.DataFrame.from_dict(dicio)
+    pd.set_option('float_format', '{:.2f}'.format)
+    dicio.clear()
     return tabela_cidade
 
 def get_uf(tabela: pd.DataFrame, estado: str, contas_interesse, coluna_interesse) -> pd.DataFrame:
     df_estado = tabela.loc[tabela['UF'] == estado]
-    df_estado['Valor'] = pd.to_numeric(df_estado['Valor'])
+    df_estado['Valor'] = pd.to_numeric(df_estado['Valor'], errors='coerce').fillna(0)
+    pd.set_option('float_format', '{:,.2f}'.format)
 
     dicio = {}
     for coluna in coluna_interesse:
         dicio[coluna] = {}
-        for conta in contas_interesse:
-            dicio[coluna][conta] = df_estado.loc[
-                (df_estado['Coluna'] == coluna) & 
-                (df_estado['Conta'] == conta)]['Valor'].sum(axis=0)
+        for conta in contas_interesse:        
+            array_soma_acumulativa = df_estado.loc[
+                (df_estado['Coluna'] == coluna) &
+                (df_estado['Conta'] == conta)]['Valor'].cumsum()
+
+            print(array_soma_acumulativa.values.max())
+            dicio[coluna][conta] = array_soma_acumulativa.values.max()
             
     tabela_uf = pd.DataFrame.from_dict(dicio)
+    pd.set_option('float_format', '{:,.2f}'.format)
+    dicio.clear()
     return tabela_uf
 
 coluna_interesse = ['Despesas Empenhadas', 'Despesas Liquidadas', 'Despesas Pagas']
@@ -69,9 +77,12 @@ contas_interesse = [
 
 if __name__ == "__main__":
     tabela = get_tabela()
-    print(tabela)
+    #print(tabela)
     #tabela_uf = get_uf(tabela, 'PE', contas_interesse, coluna_interesse)
-   # tabela_cidade = get_cidade(tabela, 'Prefeitura Municipal de Recife - PE', contas_interesse, coluna_interesse)
+    #tabela_uf2 = get_uf(tabela, 'PI', contas_interesse, coluna_interesse)
+    #tabela_uf3 = get_uf(tabela, 'BA', contas_interesse, coluna_interesse)
+    #tabela_cidade = get_cidade(tabela, 'Prefeitura Municipal de Recife - PE', contas_interesse, coluna_interesse)
+    #tabela_cidade2 = get_cidade(tabela, 'Prefeitura Municipal de Jaboatão dos Guararapes - PE', contas_interesse, coluna_interesse)
     #tabela_todos_uf = get_all_uf(tabela)
     #print(tabela_uf, end='\n')
     #print(tabela_cidade)

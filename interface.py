@@ -19,7 +19,7 @@ class Interfazinha:
 
         self.var = tk.StringVar()
         self.header = ttk.Frame(self.app)
-        self.header.pack(side='top', fill='x', padx=10, pady=10)
+        self.header.pack(side='top', fill='y')
 
         self.option1 = ttk.Radiobutton(
             self.header, text="Estados", variable=self.var, value="Estados", command=self.event_RadioButton)
@@ -32,9 +32,21 @@ class Interfazinha:
         self.cb_input_principal.set('Selecione a opção')
         self.cb_input_principal.pack(pady=10, padx=10, side='left')
 
-        self.treeview = ttk.Treeview(self.app, columns=['Tipo Conta']+['Despesas Empenhadas', 'Despesas Liquidadas', 'Despesas Pagas'])
-        # button_frame = ttk.Frame(self.app)
-        # button_frame.pack(side='top', pady=10)
+        self.style = ttk.Style()
+        self.style.configure('Treeview',
+            background = '#371c4b',
+            foreground = 'white',
+            rowheight=25,
+            
+        )
+        self.style.map('Treeview',
+            background=[('selected', '#232323')]
+        )
+
+        button_frame = ttk.Frame(self.app)
+        button_frame.pack(side='top', pady=10)
+        self.treeview = ttk.Treeview( button_frame, columns=['Tipo da Conta']+['Despesas Empenhadas', 'Despesas Liquidadas', 'Despesas Pagas'])
+
         processar_btn = ttk.Button(self.header,
                                    text='Processar',
                                    bootstyle='SUCCESS-OUTLINE',
@@ -55,23 +67,33 @@ class Interfazinha:
             self.cb_input_principal.set('Selecione o Município')
 
     def search(self, tabela, cb_input_principal):
-        print(cb_input_principal)
-        if cb_input_principal:
+        if len(cb_input_principal) == 2:
             resultados =  dados_tabela.get_uf(tabela, cb_input_principal, dados_tabela.contas_interesse, dados_tabela.coluna_interesse)
+        elif len(cb_input_principal) > 2: 
+            resultados = dados_tabela.get_cidade(tabela, cb_input_principal, dados_tabela.contas_interesse, dados_tabela.coluna_interesse)
+        
+        #treeview = ttk.Treeview(self.app, columns=['Tipo Conta']+list(resultados.columns.array))
+        treeview = self.treeview
+        treeview['show'] = 'headings'
 
-            #treeview = ttk.Treeview(self.app, columns=['Tipo Conta']+list(resultados.columns.array))
-            treeview = self.treeview
-            treeview['show'] = 'headings'
+        self.reset_treeview()
 
-            for column in treeview['columns']:
-                treeview.column(column, width=180)
-                treeview.heading(column, text=column)
+        for column in treeview['columns']:
+            treeview.column(column, width=180)
+            treeview.heading(column, text=column)
 
-            for index, row in enumerate(resultados.index.values):
-                treeview.insert('', 'end', values=[row]+list(resultados.iloc[index]))
+        for index, row in enumerate(resultados.index.values):
+            lista_valores = list(resultados.iloc[index])
+            print(lista_valores)
 
-            treeview.pack()
-            return treeview
+            # resolver erro quando vem um arraypandas vazio para retornar um valor zero
+            for index_lista in range(len(lista_valores)):
+                lista_valores[index_lista] = f'R$ {lista_valores[index_lista]:,.2f}'
+
+            treeview.insert('', 'end', values=[row]+lista_valores)
+
+        treeview.pack(pady=50, padx=100)
+        return treeview
     
     def reset_treeview(self):
         self.treeview.delete(*self.treeview.get_children())
