@@ -2,82 +2,84 @@ import tkinter as tk
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 import projeto_cont as dados_tabela
-
-def search(tabela, get_value_estado):
-    print(get_value_estados)
-    if get_value_estado != '':
-        resultados =  dados_tabela.get_uf(tabela, get_value_estado, dados_tabela.coluna_interesse, dados_tabela.contas_interesse)
-        treeview = ttk.Treeview(app)
-        treeview['columns'] = list(resultados.index.values)
-        for column in resultados.index.values:
-            treeview.column(column, width=100)
-            treeview.heading(column, text=column)
-        for index, row in enumerate(resultados.columns.array):
-            treeview.insert('', index, values=list(row), text=row)
-        treeview.pack()
-        return treeview
     
-#pegar tabela do arquivo dados_tabela
-tabela = dados_tabela.get_tabela()
+class Interfazinha:
+    def __init__(self):
+        self.criar_janela()
 
-app = ttk.Window(themename='cyborg')
-app.geometry('900x1200')
+    def criar_janela(self):
+        self.app = ttk.Window(themename='cyborg')
+        self.app.geometry('900x1200')
 
-label = ttk.Label(app, text='Projeto Contabilidade')
-label.pack(pady=30)
-label.config(font=('Arial', 20, 'bold'))
+        self.label = ttk.Label(self.app, text='Projeto Contabilidade')
+        self.label.pack(pady=30)
+        self.label.config(font=('Arial', 20, 'bold'))
 
-#municipio = ttk.Frame(app)
-#municipio.pack(pady = 15, padx = 10, fill = 'x')
-#ttk.Label(municipio, text='Cidade').pack(side='left', padx =5)
-#ttk.Entry(municipio).pack(side='left', fill= 'x', expand=True, padx =5)
+        # RadioButtons (Estados ou Municípios)
 
-# RadioButtons (Estados ou Municípios)
-def event_RadioButton():
-    if var.get() == "Estados":
-        print("Checkbox Estado")
-    else:
-        print("Checkbox Municícipos")
+        self.var = tk.StringVar()
+        self.header = ttk.Frame(self.app)
+        self.header.pack(side='top', fill='x', padx=10, pady=10)
 
-var = tk.StringVar()
-option1 = ttk.Radiobutton(app, text="Estados", variable=var, value="Estados", command=event_RadioButton)
-option1.pack(side=tk.LEFT, padx=(0, 20))
-option2 = ttk.Radiobutton(app, text="Municípios", variable=var, value="Municípios", command=event_RadioButton)
-option2.pack(side=tk.LEFT)
+        self.option1 = ttk.Radiobutton(
+            self.header, text="Estados", variable=self.var, value="Estados", command=self.event_RadioButton)
+        self.option1.pack(side=tk.LEFT, padx=20, pady=10)
+        self.option2 = ttk.Radiobutton(
+            self.header, text="Municípios", variable=self.var, value="Municípios", command=self.event_RadioButton)
+        self.option2.pack(side=tk.LEFT, padx=20, pady=10)
 
-#Combobox municipios
-todos_municipios = dados_tabela.get_all_municipios(tabela)
+        self.cb_input_principal = ttk.Combobox(self.header, width=50)
+        self.cb_input_principal.set('Selecione a opção')
+        self.cb_input_principal.pack(pady=10, padx=10, side='left')
 
-lb_municipio=ttk.Label(app, text='Município').pack(side='left', padx=10)
-cb_municipio = ttk.Combobox(app, values=todos_municipios)
-cb_municipio.set('Selecione o Município')
-cb_municipio.pack(pady = 15, padx = 10, fill = 'x')
+        self.treeview = ttk.Treeview(self.app, columns=['Tipo Conta']+['Despesas Empenhadas', 'Despesas Liquidadas', 'Despesas Pagas'])
+        # button_frame = ttk.Frame(self.app)
+        # button_frame.pack(side='top', pady=10)
+        processar_btn = ttk.Button(self.header,
+                                   text='Processar',
+                                   bootstyle='SUCCESS-OUTLINE',
+                                   command=lambda: self.search(
+                                       tabela, self.cb_input_principal.get())
+                                   )
+        processar_btn.pack(pady=10, padx=10, side='left')
 
-#Combobox estados
-todos_uf = dados_tabela.get_all_uf(tabela)
+    def event_RadioButton(self):
+        if self.var.get() == "Estados":
+            todos_uf = dados_tabela.get_all_uf(tabela)
+            self.cb_input_principal['values'] = todos_uf
+            self.cb_input_principal.set('Selecione o Estado')
+        else:
+            todos_municipios = dados_tabela.get_all_municipios(
+                tabela)  
+            self.cb_input_principal['values'] = todos_municipios
+            self.cb_input_principal.set('Selecione o Município')
 
-lb_estados=ttk.Label(app, text='Estados').pack(side='left', padx=10)
-cb_estados = ttk.Combobox(app, values=todos_uf)
-cb_estados.set('Selecione o Estado')
-cb_estados.pack(pady = 15, padx = 10, fill = 'x')
+    def search(self, tabela, cb_input_principal):
+        print(cb_input_principal)
+        if cb_input_principal:
+            resultados =  dados_tabela.get_uf(tabela, cb_input_principal, dados_tabela.contas_interesse, dados_tabela.coluna_interesse)
 
-get_value_estados = cb_estados.get()
-#estado = ttk.Entry(cb_estados).pack(side='left', fill= 'x', expand=True, padx =5)
+            #treeview = ttk.Treeview(self.app, columns=['Tipo Conta']+list(resultados.columns.array))
+            treeview = self.treeview
+            treeview['show'] = 'headings'
 
-#estados = ttk.Frame(app)
-#estados.pack(pady = 15, padx = 10, fill = 'x')
-#ttk.Label(estados, text='Estado').pack(side='left', padx =5)
-#estado = ttk.Entry(estados).pack(side='left', fill= 'x', expand=True, padx =5)
+            for column in treeview['columns']:
+                treeview.column(column, width=180)
+                treeview.heading(column, text=column)
 
-checkbox_frame = ttk.Frame(app)
-checkbox_frame.pack(pady=15, padx=10, fill='x')
-ttk.Checkbutton(checkbox_frame, bootstyle='info-round-toggle', text='Salvar informação').pack(side='left', padx=10)
+            for index, row in enumerate(resultados.index.values):
+                treeview.insert('', 'end', values=[row]+list(resultados.iloc[index]))
+
+            treeview.pack()
+            return treeview
+    
+    def reset_treeview(self):
+        self.treeview.delete(*self.treeview.get_children())
 
 
-button_frame = ttk.Frame(app)
-button_frame.pack(pady=50, fill='x')
-ttk.Button(button_frame, text='Pesquisar', bootstyle = 'SUCCESS-OUTLINE', command=search(tabela, get_value_estados)).pack(side='top', padx=10)
+if __name__ == "__main__":
+    # pegar tabela do arquivo dados_tabela
+    tabela = dados_tabela.get_tabela()
 
-
-app.mainloop()
-# filedialog
+    interface = Interfazinha()
+    interface.app.mainloop() 
