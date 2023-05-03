@@ -46,7 +46,7 @@ class Interfazinha:
 
         button_frame = ttk.Frame(self.app)
         button_frame.pack(side='top', pady=10)
-        self.treeview = ttk.Treeview( button_frame, columns=['Tipo da Conta']+['Despesas Empenhadas', 'Despesas Liquidadas', 'Despesas Pagas'])
+        self.treeview = ttk.Treeview( button_frame, columns=['Tipo da Conta']+['Despesas Empenhadas', 'Despesas Liquidadas', 'Despesas Pagas', 'Seguridade Social'])
 
         processar_btn = ttk.Button(self.header,
                                    text='Processar',

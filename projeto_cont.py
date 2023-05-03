@@ -5,6 +5,27 @@ def get_tabela():
 
     return tabela
 
+"""def get_seguridade_social(tabela: pd.DataFrame, cidade: str):
+    df_cidade = tabela.loc[tabela['Instituição'] == cidade]
+    df_cidade['Valor'] = pd.to_numeric(df_cidade['Valor'], errors='coerce').fillna(0)
+    print(df_cidade)
+
+    df_valor_seguridade_social = df_cidade.loc[
+        (df_cidade['Despesas Empenhadas']['08 - Assistência Social']) & 
+        (df_cidade['Despesas Empenhadas']['09 - Previdência Social']) & 
+        (df_cidade['Despesas Empenhadas']['10 - Saúde'])
+        ]['Valor'].cumsum()
+    
+    
+
+    df_assis = df_cidade.loc[df_cidade['Despesas Empenhadas']['08 - Assistência Social']]
+    df_prev = df_cidade.loc[df_cidade['Despesas Empenhadas']['09 - Previdência Social']]
+    df_saude = df_cidade.loc[df_cidade['Despesas Empenhadas']['10 - Saúde']]
+
+    df_valor_seguridade_social = df_assis + df_prev + df_saude
+
+    return df_valor_seguridade_social"""
+
 def get_all_municipios(tabela: pd.DataFrame) -> list:
     df_municipio = tabela['Instituição'].unique()
     list_municipio = list(df_municipio)
@@ -65,18 +86,20 @@ contas_interesse = [
     '08 - Assistência Social', 
     '09 - Previdência Social', 
     '10 - Saúde', 
-    '12 - Educação',
     '10.301 - Atenção Básica',
     '10.302 - Assistência Hospitalar e Ambulatorial', 
     '10.303 - Suporte Profilático e Terapêutico', 
     '10.304 - Vigilância Sanitária', 
     '10.305 - Vigilância Epidemiológica', 
-    '10.306 - Alimentação e Nutrição'
+    '10.306 - Alimentação e Nutrição',
+    '12 - Educação',
     ]
 
 
 if __name__ == "__main__":
     tabela = get_tabela()
+    #valor_seguridade = get_seguridade_social(tabela, 'Prefeitura Municipal de Recife - PE')
+   #print(valor_seguridade)
     #print(tabela)
     #tabela_uf = get_uf(tabela, 'PE', contas_interesse, coluna_interesse)
     #tabela_uf2 = get_uf(tabela, 'PI', contas_interesse, coluna_interesse)
