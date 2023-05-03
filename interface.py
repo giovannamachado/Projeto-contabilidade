@@ -1,6 +1,7 @@
 import tkinter as tk
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
+import numpy as np
 import projeto_cont as dados_tabela
     
 class Interfazinha:
@@ -84,11 +85,12 @@ class Interfazinha:
 
         for index, row in enumerate(resultados.index.values):
             lista_valores = list(resultados.iloc[index])
-            print(lista_valores)
 
-            # resolver erro quando vem um arraypandas vazio para retornar um valor zero
             for index_lista in range(len(lista_valores)):
-                lista_valores[index_lista] = f'R$ {lista_valores[index_lista]:,.2f}'
+                if isinstance(lista_valores[index_lista], np.ndarray):
+                    lista_valores[index_lista] = f'R$ 0'
+                else:
+                    lista_valores[index_lista] = f'R$ {lista_valores[index_lista]:,.2f}'
 
             treeview.insert('', 'end', values=[row]+lista_valores)
 
