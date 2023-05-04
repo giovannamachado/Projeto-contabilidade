@@ -67,21 +67,18 @@ class Interfazinha:
             self.cb_input_principal['values'] = todos_municipios
             self.cb_input_principal.set('Selecione o Município')
 
-    def search(self, tabela, cb_input_principal):
+    def search(self, tabela, cb_input_principal: str):
         if len(cb_input_principal) == 2:
             resultados =  dados_tabela.get_uf(tabela, cb_input_principal, dados_tabela.contas_interesse, dados_tabela.coluna_interesse)
         elif len(cb_input_principal) > 2: 
             resultados = dados_tabela.get_cidade(tabela, cb_input_principal, dados_tabela.contas_interesse, dados_tabela.coluna_interesse)
         
-        #treeview = ttk.Treeview(self.app, columns=['Tipo Conta']+list(resultados.columns.array))
-        treeview = self.treeview
-        treeview['show'] = 'headings'
-
+        self.treeview['show'] = 'headings'
         self.reset_treeview()
 
-        for column in treeview['columns']:
-            treeview.column(column, width=180)
-            treeview.heading(column, text=column)
+        for column in self.treeview['columns']:
+            self.treeview.column(column, width=180)
+            self.treeview.heading(column, text=column)
 
         for index, row in enumerate(resultados.index.values):
             lista_valores = list(resultados.iloc[index])
@@ -92,10 +89,10 @@ class Interfazinha:
                 else:
                     lista_valores[index_lista] = f'R$ {lista_valores[index_lista]:,.2f}'
 
-            treeview.insert('', 'end', values=[row]+lista_valores)
+            self.treeview.insert('', 'end', values=[row]+lista_valores)
 
-        treeview.pack(pady=50, padx=100)
-        return treeview
+        self.treeview.pack(pady=50, padx=100)
+        return self.treeview
     
     def reset_treeview(self):
         self.treeview.delete(*self.treeview.get_children())
