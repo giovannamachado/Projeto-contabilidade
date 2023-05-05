@@ -85,7 +85,7 @@ class Interfazinha:
                        )
 
         self.tabela_frame = ttk.Frame(self.app)
-        self.tabela_frame.pack(side='top', pady=10)
+        self.tabela_frame.pack(side='top', fill='both', padx=50, pady=10)
 
         self.treeview = ttk.Treeview(self.tabela_frame, columns=['Tipo da Conta']+ dados_tabela.coluna_interesse)
         self.treeview['show'] = 'headings'
@@ -97,6 +97,7 @@ class Interfazinha:
         for column in self.treeview['columns'][1:]:
             self.treeview.column(column, width=200, anchor='center')
             self.treeview.heading(column, text=column)
+        self.treeview.pack(pady=50, fill='both')
 
         processar_btn = ttk.Button(self.header,
                                    text='Processar',
@@ -166,8 +167,6 @@ class Interfazinha:
                     lista_valores[index_lista] = f'R$ {lista_valores[index_lista]:,.2f}'
 
             self.treeview.insert('', 'end', values=[row]+lista_valores)
-
-        self.treeview.pack(pady=50, padx=100)
         return self.treeview
 
     def reset_treeview(self):
