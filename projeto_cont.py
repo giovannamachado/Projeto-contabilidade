@@ -5,7 +5,9 @@ def get_tabela():
 
     return tabela
 
-def get_seguridade_social(tabela: pd.DataFrame, cidade: str):
+def get_seguridade_social(planilha: pd.DataFrame):
+    return planilha.loc[['08 - Assistência Social', '09 - Previdência Social', '10 - Saúde'], 'Despesas Empenhadas'].sum()
+
     df_cidade = tabela.loc[tabela['Instituição'] == cidade]
     df_cidade['Valor'] = pd.to_numeric(df_cidade['Valor'], errors='coerce').fillna(0)
 
@@ -118,7 +120,9 @@ contas_interesse = [
 
 if __name__ == "__main__":
     tabela = get_tabela()
-    get_uf_municipios(tabela_com_tudo=tabela, estado='PE')
+    resultados = get_uf(tabela, 'PE', contas_interesse, coluna_interesse)
+    social = get_seguridade_social(resultados)
+    print(f"{social=}")
     #valor_seguridade = get_seguridade_social(tabela, 'Prefeitura Municipal de Recife - PE')
    #print(valor_seguridade)
     #print(tabela)

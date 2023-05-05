@@ -87,9 +87,10 @@ class Interfazinha:
         self.tabela_frame = ttk.Frame(self.app)
         self.tabela_frame.pack(side='top', fill='both', padx=50, pady=10)
 
-        self.treeview = ttk.Treeview(self.tabela_frame, columns=['Tipo da Conta']+ dados_tabela.coluna_interesse)
+        self.treeview = ttk.Treeview(self.tabela_frame, columns=[
+                                     'Tipo da Conta'] + dados_tabela.coluna_interesse)
         self.treeview['show'] = 'headings'
-        
+
         self.treeview.column('Tipo da Conta', width=315)
         self.treeview.heading('Tipo da Conta', text='Tipo da Conta')
 
@@ -100,11 +101,15 @@ class Interfazinha:
         self.treeview.pack(pady=30, fill='both')
 
         # Seguridade social
-        self.label_seguridade = ttk.Label(self.tabela_frame, text='Seguridade Social (Despesas Empenhadas -> (08 - Assistência Social + 09 - Previdência Social + 10 - Sáude))')
-        self.label_valor_seguridade = ttk.Label(self.tabela_frame, text='')
-        self.label_seguridade.config(font=('Arial', 10, 'normal'), background='#121212', padding=5)
-        self.label_valor_seguridade.config(anchor='center', font=('Arial', 10, 'normal'), background='#371c4b', width=92, padding=4)
+        self.label_seguridade = ttk.Label(
+            self.tabela_frame, text='Seguridade Social (Despesas Empenhadas -> (08 - Assistência Social + 09 - Previdência Social + 10 - Sáude))')
+        self.label_seguridade.config(
+            font=('Arial', 10, 'normal'), background='#121212', padding=5)
         self.label_seguridade.pack()
+
+        self.label_valor_seguridade = ttk.Label(self.tabela_frame, text='')
+        self.label_valor_seguridade.config(anchor='center', font=(
+            'Arial', 10, 'normal'), background='#371c4b', width=92, padding=4)
         self.label_valor_seguridade.pack()
 
         processar_btn = ttk.Button(self.header,
@@ -127,7 +132,6 @@ class Interfazinha:
                                           command=self.abrir_janela_especial
                                           )
         self.edit_opcoes_btn.pack(pady=10, padx=10, side='left')
-
 
     def event_RadioButton(self):  # Chamado quando algum radio button é pressionado
         print("Radio btn pressionado")
@@ -155,19 +159,37 @@ class Interfazinha:
             estado=self.cb_input_uf.get()
         )
 
-    def processar(self): # Chamado quando apertar o botão processsar, buscando e exibindo os dados
+    def processar(self):  # Chamado quando apertar o botão processsar, buscando e exibindo os dados
         if self.option_selected.get() == "Estados":
             resultados = dados_tabela.get_uf(self.tabela, self.cb_input_uf.get(
             ), self.contas_selecionadas, dados_tabela.coluna_interesse)
 
             self.label_valor_seguridade['text'] = '-'
+            valor_seguridade_social = dados_tabela.get_seguridade_social(
+                dados_tabela.get_uf(
+                    self.tabela,
+                    self.cb_input_uf.get(),
+                    ['08 - Assistência Social',
+                        '09 - Previdência Social', '10 - Saúde'],
+                    ['Despesas Empenhadas']
+                )
+            )
 
         else:
             resultados = dados_tabela.get_cidade(self.tabela, self.cb_input_municipio.get(
             ), self.contas_selecionadas, dados_tabela.coluna_interesse)
 
-            valor_seguridade_social = dados_tabela.get_seguridade_social(self.tabela, self.cb_input_municipio.get())
-            self.label_valor_seguridade['text'] = f'R$ {valor_seguridade_social:,.2f}'
+            valor_seguridade_social = dados_tabela.get_seguridade_social(
+                dados_tabela.get_cidade(
+                    self.tabela,
+                    self.cb_input_municipio.get(),
+                    ['08 - Assistência Social',
+                        '09 - Previdência Social', '10 - Saúde'],
+                    ['Despesas Empenhadas']
+                )
+            )
+
+        self.label_valor_seguridade['text'] = f'R$ {valor_seguridade_social:,.2f}'
 
         self.reset_treeview()
 
@@ -182,10 +204,10 @@ class Interfazinha:
 
             self.treeview.insert('', 'end', values=[row]+lista_valores)
 
-    def reset_treeview(self): # Chamado quando reseta a tabela de processar
+    def reset_treeview(self):  # Chamado quando reseta a tabela de processar
         self.treeview.delete(*self.treeview.get_children())
 
-    def carregar_planilha(self): #chamando quando pressiona o button carregar
+    def carregar_planilha(self):  # chamando quando pressiona o button carregar
         self.carregar_btn['text'] = "Carregando..."
         self.carregar_btn.config(state='disabled')
 
@@ -233,10 +255,10 @@ if __name__ == "__main__":
 
     interface = Interfazinha()
     interface.criar_janela()
-    
+
     try:
         interface.carregar_tabela(dados_tabela.get_tabela())
     except:
         print("Deu erro ao carregar a tabela, isso deve acontecer no pc do cara, deboa.")
-    
+
     interface.app.mainloop()
