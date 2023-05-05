@@ -164,32 +164,27 @@ class Interfazinha:
             resultados = dados_tabela.get_uf(self.tabela, self.cb_input_uf.get(
             ), self.contas_selecionadas, dados_tabela.coluna_interesse)
 
-            self.label_valor_seguridade['text'] = '-'
-            valor_seguridade_social = dados_tabela.get_seguridade_social(
-                dados_tabela.get_uf(
-                    self.tabela,
-                    self.cb_input_uf.get(),
-                    ['08 - Assistência Social',
-                        '09 - Previdência Social', '10 - Saúde'],
-                    ['Despesas Empenhadas']
-                )
-            )
+            valor_seguridade_social = dados_tabela.get_uf(
+                self.tabela,
+                self.cb_input_uf.get(),
+                ['08 - Assistência Social',
+                    '09 - Previdência Social', '10 - Saúde'],
+                ['Despesas Empenhadas']
+            )           
 
         else:
             resultados = dados_tabela.get_cidade(self.tabela, self.cb_input_municipio.get(
             ), self.contas_selecionadas, dados_tabela.coluna_interesse)
 
-            valor_seguridade_social = dados_tabela.get_seguridade_social(
-                dados_tabela.get_cidade(
-                    self.tabela,
-                    self.cb_input_municipio.get(),
-                    ['08 - Assistência Social',
-                        '09 - Previdência Social', '10 - Saúde'],
-                    ['Despesas Empenhadas']
-                )
-            )
+            valor_seguridade_social = dados_tabela.get_cidade(
+                self.tabela,
+                self.cb_input_municipio.get(),
+                ['08 - Assistência Social',
+                    '09 - Previdência Social', '10 - Saúde'],
+                ['Despesas Empenhadas']
+            )  
 
-        self.label_valor_seguridade['text'] = f'R$ {valor_seguridade_social:,.2f}'
+        self.label_valor_seguridade['text'] = f'R$ {valor_seguridade_social.values.sum():,.2f}'
 
         self.reset_treeview()
 
