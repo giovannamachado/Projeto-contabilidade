@@ -151,7 +151,7 @@ class Interfazinha:
         if self.option_selected.get() == "Estados":
             resultados = dados_tabela.get_uf(self.tabela, self.cb_input_uf.get(
             ), self.contas_selecionadas, dados_tabela.coluna_interesse)
-        elif self.option_selected.get() == "Municípios":
+        else:
             resultados = dados_tabela.get_cidade(self.tabela, self.cb_input_municipio.get(
             ), self.contas_selecionadas, dados_tabela.coluna_interesse)
 
@@ -167,7 +167,6 @@ class Interfazinha:
                     lista_valores[index_lista] = f'R$ {lista_valores[index_lista]:,.2f}'
 
             self.treeview.insert('', 'end', values=[row]+lista_valores)
-        return self.treeview
 
     def reset_treeview(self):
         self.treeview.delete(*self.treeview.get_children())
