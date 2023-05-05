@@ -9,7 +9,6 @@ def get_tabela():
     df_cidade = tabela.loc[tabela['Instituição'] == cidade]
     df_cidade['Valor'] = pd.to_numeric(df_cidade['Valor'], errors='coerce').fillna(0)
     print(df_cidade)
-
     df_valor_seguridade_social = df_cidade.loc[
         (df_cidade['Despesas Empenhadas']['08 - Assistência Social']) & 
         (df_cidade['Despesas Empenhadas']['09 - Previdência Social']) & 
@@ -17,13 +16,10 @@ def get_tabela():
         ]['Valor'].cumsum()
     
     
-
     df_assis = df_cidade.loc[df_cidade['Despesas Empenhadas']['08 - Assistência Social']]
     df_prev = df_cidade.loc[df_cidade['Despesas Empenhadas']['09 - Previdência Social']]
     df_saude = df_cidade.loc[df_cidade['Despesas Empenhadas']['10 - Saúde']]
-
     df_valor_seguridade_social = df_assis + df_prev + df_saude
-
     return df_valor_seguridade_social"""
 
 def get_all_municipios(tabela: pd.DataFrame) -> list[str]:
