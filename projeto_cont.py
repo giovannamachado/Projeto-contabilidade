@@ -5,22 +5,34 @@ def get_tabela():
 
     return tabela
 
-"""def get_seguridade_social(tabela: pd.DataFrame, cidade: str):
+def get_seguridade_social(tabela: pd.DataFrame, cidade: str):
     df_cidade = tabela.loc[tabela['Instituição'] == cidade]
     df_cidade['Valor'] = pd.to_numeric(df_cidade['Valor'], errors='coerce').fillna(0)
-    print(df_cidade)
-    df_valor_seguridade_social = df_cidade.loc[
-        (df_cidade['Despesas Empenhadas']['08 - Assistência Social']) & 
-        (df_cidade['Despesas Empenhadas']['09 - Previdência Social']) & 
-        (df_cidade['Despesas Empenhadas']['10 - Saúde'])
-        ]['Valor'].cumsum()
+
+    df_despesa_empenhadas = df_cidade.loc[df_cidade['Coluna'] == 'Despesas Empenhadas']
     
+    df_conta_assis = df_despesa_empenhadas.loc[df_despesa_empenhadas['Conta'] == '08 - Assistência Social']
+    df_conta_prev = df_despesa_empenhadas.loc[df_despesa_empenhadas['Conta'] == '09 - Previdência Social']
+    df_conta_saude = df_despesa_empenhadas.loc[df_despesa_empenhadas['Conta'] == '10 - Saúde']
     
-    df_assis = df_cidade.loc[df_cidade['Despesas Empenhadas']['08 - Assistência Social']]
-    df_prev = df_cidade.loc[df_cidade['Despesas Empenhadas']['09 - Previdência Social']]
-    df_saude = df_cidade.loc[df_cidade['Despesas Empenhadas']['10 - Saúde']]
-    df_valor_seguridade_social = df_assis + df_prev + df_saude
-    return df_valor_seguridade_social"""
+    if df_conta_assis.empty:
+        df_conta_assis = 0
+    else:
+        df_conta_assis = df_conta_assis['Valor'].values[0]
+
+    if df_conta_prev.empty:
+        df_conta_prev = 0
+    else:
+        df_conta_prev = df_conta_prev['Valor'].values[0]
+
+    if df_conta_saude.empty:
+        df_conta_saude = 0
+    else:
+        df_conta_saude = df_conta_saude['Valor'].values[0]
+
+    soma_seguridade_social = df_conta_assis + df_conta_prev + df_conta_saude
+
+    return soma_seguridade_social
 
 def get_all_municipios(tabela: pd.DataFrame) -> list[str]:
     df_municipio = tabela['Instituição'].unique()

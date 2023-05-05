@@ -97,7 +97,15 @@ class Interfazinha:
         for column in self.treeview['columns'][1:]:
             self.treeview.column(column, width=200, anchor='center')
             self.treeview.heading(column, text=column)
-        self.treeview.pack(pady=50, fill='both')
+        self.treeview.pack(pady=30, fill='both')
+
+        # Seguridade social
+        self.label_seguridade = ttk.Label(self.tabela_frame, text='Seguridade Social (Despesas Empenhadas -> (08 - Assistência Social + 09 - Previdência Social + 10 - Sáude))')
+        self.label_valor_seguridade = ttk.Label(self.tabela_frame, text='')
+        self.label_seguridade.config(font=('Arial', 10, 'normal'), background='#121212', padding=5)
+        self.label_valor_seguridade.config(anchor='center', font=('Arial', 10, 'normal'), background='#371c4b', width=92, padding=4)
+        self.label_seguridade.pack()
+        self.label_valor_seguridade.pack()
 
         processar_btn = ttk.Button(self.header,
                                    text='Processar',
@@ -147,13 +155,19 @@ class Interfazinha:
             estado=self.cb_input_uf.get()
         )
 
-    def processar(self):
+    def processar(self): # Chamado quando apertar o botão processsar, buscando e exibindo os dados
         if self.option_selected.get() == "Estados":
             resultados = dados_tabela.get_uf(self.tabela, self.cb_input_uf.get(
             ), self.contas_selecionadas, dados_tabela.coluna_interesse)
+
+            self.label_valor_seguridade['text'] = '-'
+
         else:
             resultados = dados_tabela.get_cidade(self.tabela, self.cb_input_municipio.get(
             ), self.contas_selecionadas, dados_tabela.coluna_interesse)
+
+            valor_seguridade_social = dados_tabela.get_seguridade_social(self.tabela, self.cb_input_municipio.get())
+            self.label_valor_seguridade['text'] = f'R$ {valor_seguridade_social:,.2f}'
 
         self.reset_treeview()
 
@@ -168,10 +182,10 @@ class Interfazinha:
 
             self.treeview.insert('', 'end', values=[row]+lista_valores)
 
-    def reset_treeview(self):
+    def reset_treeview(self): # Chamado quando reseta a tabela de processar
         self.treeview.delete(*self.treeview.get_children())
 
-    def carregar_planilha(self):
+    def carregar_planilha(self): #chamando quando pressiona o button carregar
         self.carregar_btn['text'] = "Carregando..."
         self.carregar_btn.config(state='disabled')
 
