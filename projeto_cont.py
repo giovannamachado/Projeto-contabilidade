@@ -5,26 +5,19 @@ def get_tabela():
 
     return tabela
 
-"""def get_seguridade_social(tabela: pd.DataFrame, cidade: str):
+def get_seguridade_social(tabela: pd.DataFrame, cidade: str):
     df_cidade = tabela.loc[tabela['Instituição'] == cidade]
     df_cidade['Valor'] = pd.to_numeric(df_cidade['Valor'], errors='coerce').fillna(0)
-    print(df_cidade)
 
-    df_valor_seguridade_social = df_cidade.loc[
-        (df_cidade['Despesas Empenhadas']['08 - Assistência Social']) & 
-        (df_cidade['Despesas Empenhadas']['09 - Previdência Social']) & 
-        (df_cidade['Despesas Empenhadas']['10 - Saúde'])
-        ]['Valor'].cumsum()
+    df_despesa_empenhadas = df_cidade.loc[df_cidade['Coluna'] == 'Despesas Empenhadas']
     
-    
+    df_conta_assis = df_despesa_empenhadas.loc[df_despesa_empenhadas['Conta'] == '08 - Assistência Social']['Valor'].values[0]
+    df_conta_prev = df_despesa_empenhadas.loc[df_despesa_empenhadas['Conta'] == '09 - Previdência Social']['Valor'].values[0]
+    df_conta_saude = df_despesa_empenhadas.loc[df_despesa_empenhadas['Conta'] == '10 - Saúde']['Valor'].values[0]
 
-    df_assis = df_cidade.loc[df_cidade['Despesas Empenhadas']['08 - Assistência Social']]
-    df_prev = df_cidade.loc[df_cidade['Despesas Empenhadas']['09 - Previdência Social']]
-    df_saude = df_cidade.loc[df_cidade['Despesas Empenhadas']['10 - Saúde']]
+    soma_seguridade_social = df_conta_assis + df_conta_prev + df_conta_saude
 
-    df_valor_seguridade_social = df_assis + df_prev + df_saude
-
-    return df_valor_seguridade_social"""
+    return soma_seguridade_social
 
 def get_all_municipios(tabela: pd.DataFrame) -> list:
     df_municipio = tabela['Instituição'].unique()
@@ -70,7 +63,10 @@ def get_uf(tabela: pd.DataFrame, estado: str, contas_interesse, coluna_interesse
                 (df_estado['Coluna'] == coluna) &
                 (df_estado['Conta'] == conta)]['Valor'].cumsum()
 
-            dicio[coluna][conta] = array_soma_acumulativa.values.max()
+            if array_soma_acumulativa.values.size == 0:
+                dicio[coluna][conta] = 0
+            else:
+                dicio[coluna][conta] = array_soma_acumulativa.values.max()
             
     tabela_uf = pd.DataFrame.from_dict(dicio)
     pd.set_option('float_format', '{:,.2f}'.format)
