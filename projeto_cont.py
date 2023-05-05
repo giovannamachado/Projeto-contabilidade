@@ -85,23 +85,3 @@ contas_interesse = [
     '10.305 - Vigilância Epidemiológica', 
     '10.306 - Alimentação e Nutrição',
     ]
-
-
-if __name__ == "__main__":
-    tabela = get_tabela()
-    resultados = get_uf(tabela, 'PE', contas_interesse, coluna_interesse)
-    social = get_seguridade_social(resultados)
-    print(f"{social=}")
-    #valor_seguridade = get_seguridade_social(tabela, 'Prefeitura Municipal de Recife - PE')
-   #print(valor_seguridade)
-    #print(tabela)
-    #tabela_uf = get_uf(tabela, 'PE', contas_interesse, coluna_interesse)
-    #tabela_uf2 = get_uf(tabela, 'PI', contas_interesse, coluna_interesse)
-    #tabela_uf3 = get_uf(tabela, 'BA', contas_interesse, coluna_interesse)
-    #tabela_cidade = get_cidade(tabela, 'Prefeitura Municipal de Recife - PE', contas_interesse, coluna_interesse)
-    #tabela_cidade2 = get_cidade(tabela, 'Prefeitura Municipal de Jaboatão dos Guararapes - PE', contas_interesse, coluna_interesse)
-    #tabela_todos_uf = get_all_uf(tabela)
-    #print(tabela_uf, end='\n')
-    #print(tabela_cidade)
-    #print(tabela_todos_uf)
-    #tabela_cidade.to_csv('valor_cidade.csv', index=False)
