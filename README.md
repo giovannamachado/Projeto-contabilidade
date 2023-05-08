@@ -1,8 +1,8 @@
 # Projeto-contabilidade
 
-##Projeto feito para disciplina de contabilidade no CIn-UFPE
+## Projeto feito para disciplina de contabilidade no [CIn-UFPE](https://portal.cin.ufpe.br/)
 
-### Algoritmo que permite extrair informações de uma tabela (execel ou csv).
+### Algoritmo que permite extrair informações de uma tabela (excel ou csv).
 ### Dados relativos às suas funções orçamentais. 
 
 
