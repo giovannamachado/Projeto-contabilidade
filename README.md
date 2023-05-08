@@ -1,10 +1,9 @@
 # Projeto-contabilidade
 
-### algoritmo que permite extrair informações e dados por municípios e estados brasileiros, relativos às funções orçamentais. 
+##Projeto feito para disciplina de contabilidade no CIn-UFPE
 
-
-
-
+### Algoritmo que permite extrair informações de uma tabela (execel ou csv).
+### Dados relativos às suas funções orçamentais. 
 
 
 
